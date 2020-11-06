@@ -49,3 +49,26 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post('users', 'App\Http\Controllers\UsersController@store');
+    
+    Route::get('users/user_all', [
+        'as' => 'users.user_all',
+        'uses' => 'App\Http\Controllers\UsersController@user_all'
+    ]);
+    
+    Route::get('users/user_all', [
+        'as' => 'users.user_all',
+        'uses' => 'App\Http\Controllers\UsersController@user_all'
+    ]);
+    
+    Route::get('users/info/{id}',[
+		'uses' => 'App\Http\Controllers\UsersController@info'
+	]);
+    
+    Route::put('users/{id}', [
+        'uses' => 'App\Http\Controllers\UsersController@update'
+    ]);
+    Route::delete('users/{id}',[
+        'uses' => 'App\Http\Controllers\UsersController@destroy'
+    ]);
