@@ -26,3 +26,20 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('films', 'FilmController@store')->middleware('role');
+
+Route::get('films/film_all', [
+    'as' => 'films.film_all',
+    'uses' => 'FilmController@film_all'
+]);
+
+Route::get('films/film_all', [
+    'as' => 'films.film_all',
+    'uses' => 'FilmController@film_all'
+]);
+
+Route::get('films/info','FilmController@info')->middleware('role');
+
+	Route::put('films/{id}', [
+		'uses' => 'FilmController@update'
+	]);

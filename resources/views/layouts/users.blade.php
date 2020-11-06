@@ -6,8 +6,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Películas
-                    <a href="#" id="open-modal-crear" class="btn btn-sm btn-primary float-right open_modal-crear" data-toggle="modal" data-target="#ModalCreatePelicula">Crear</a>
+                <div class="card-header">Usuarios
+                    <a href="#" id="open-modal-crear" class="btn btn-sm btn-primary float-right open_modal-crear" data-toggle="modal" data-target="#ModalCreateUser">Crear</a>
                 </div>
                 <div class="card-body" id='table_films'>
                     @if (session('status'))
@@ -18,9 +18,9 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Título</th>
-                                <th>Sinopsis</th>
-                                <th>Año</th>
+                                <th>Nombre</th>
+                                <th>Nickname</th>
+                                <th>Email</th>
                                 <th colspan="2">Acciones</th>
 
                             </tr>
@@ -32,7 +32,7 @@
                                 <td>yy</td>
                                 <td>yy</td>
                                 <td>
-                                    <a href="#" id="open-modal-edit" data-toggle="modal" class="btn btn-primary btn-sm open-modal" data-target="#ModalEditPelicula">Editar</a>
+                                    <a href="#" id="open-modal-edit" data-toggle="modal" class="btn btn-primary btn-sm open-modal" data-target="#ModalEditUser">Editar</a>
                                 </td>
                                 <td>
                                     <form action="" method="Post" >
@@ -53,36 +53,42 @@
 </div>
 @endsection
 <!--modal crear-->
-<div class="modal fade" id="ModalCreatePelicula" aria-hidden="true" >
+<div class="modal fade" id="ModalCreateUser" aria-hidden="true" >
     <div class="modal-dialog">
     <div class="modal-content">
     <div class="modal-header">
-    <h4 class="modal-title" id="CrudModal">Cargar Película</h4>
+    <h4 class="modal-title" id="CrudModal">Crear Usuario</h4>
     </div>
     <div class="modal-body">
     <input type="hidden" name="film_id" id="film_id" >
     @csrf
     <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-    <strong>Título:</strong>
-    <input type="text" name="title" id="title" class="form-control" placeholder="Título" onchange="validate()" >
-    </div>
-    </div>
+        <div class="form-group">
+        <strong>Nombre:</strong>
+        <input type="text" name="name" maxlength="5" id="name" class="form-control" placeholder="Usuario" onchange="validate()" required>
+        </div>
+        </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-    <strong>Sinopsis:</strong>
-    <textarea name="synopsis" id="synopsis" class="form-control" placeholder="Sinopsis" ></textarea>
-    </div>
-    </div>
+        <div class="form-group">
+        <strong>Nickname:</strong>
+        <input type='text' name="nickname" pattern="[A-Za-z0-9]" id="nickname" class="form-control" placeholder="Nickname" >
+        </div>
+        </div>
     <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-    <strong>Año:</strong>
-    <input type="number" name="age" maxlength="4" id="age" class="form-control" placeholder="Año" onblur="validate()" onkeypress="validate()" required>
-    </div>
-    </div>
+        <div class="form-group">
+        <strong>Email:</strong>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email" onblur="validate()" onkeypress="validate()" required>
+        </div>
+        </div>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="form-group">
+        <strong>Contraseña:</strong>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" onblur="validate()" onkeypress="validate()" required>
+        </div>
+        </div>
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-    <button onclick="SaveFilm()" id="btn-save" name="btnsave" class="btn btn-primary" >Guardar</button>
+    <button onclick="SaveUser()" id="btn-save" name="btnsave" class="btn btn-primary" >Guardar</button>
     <a href="" class="btn btn-danger">Cancelar</a>
     </div>
     </div>
@@ -91,37 +97,43 @@
     </div>
     </div>
 <!-- Modal Editar-->
-<div class="modal fade" id="ModalEditPelicula" aria-hidden="true" >
+<div class="modal fade" id="ModalEditUser" aria-hidden="true" >
     <div class="modal-dialog">
     <div class="modal-content">
     <div class="modal-header">
-    <h4 class="modal-title" id="EditCrudModal">Editar Película</h4>
+    <h4 class="modal-title" id="EditCrudModal">Editar Usuario</h4>
     </div>
     <div class="modal-body">
     <input type="hidden" name="film_id" id="film_id" >
     @csrf
     <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-    <strong>Título:</strong>
-    <input type="text" name="edit_title" id="edit_title" class="form-control" placeholder="Título" onchange="validate()" value=''>
-    </div>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-    <strong>Sinopsis:</strong>
-    <textarea name="edit_synopsis" id="edit_synopsis" class="form-control" placeholder="Sinopsis" value=''></textarea>
-    </div>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="form-group">
-    <strong>Año:</strong>
-    <input type="number" maxlength="4" name="edit_age" id="edit_age" class="form-control" placeholder="Año" onblur="validate()" onkeypress="validate()" value='' required>
-    </div>
-    </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+            <strong>Nombre:</strong>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Usuario" onchange="validate()" required value=''>
+            </div>
+            </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+            <strong>Nickname:</strong>
+            <textarea name="nickname" id="nickname" class="form-control" placeholder="Nickname" value=''></textarea>
+            </div>
+            </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+            <strong>Email:</strong>
+            <input type="email" name="email" id="email" class="form-control" placeholder="Email" onblur="validate()" onkeypress="validate()" required value=''>
+            </div>
+            </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+            <strong>Contraseña:</strong>
+            <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" onblur="validate()" onkeypress="validate()" required value=''>
+            </div>
+            </div>
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
     <input type='hidden' id='id_film' name='id_film' value=''>
-    <button onclick="SaveEditFilm()" id="edit-btn-save" name="edit-btn-save" class="btn btn-primary" >Guardar</button>
+    <button onclick="SaveEditUser()" id="edit-btn-save" name="edit-btn-save" class="btn btn-primary" >Guardar</button>
     <a href="" class="btn btn-danger">Cancelar</a>
     </div>
     </div>
@@ -129,17 +141,17 @@
     </div>
     </div>
     </div>
-    <script type="text/javascript">
+    <script>
         $( document ).ready(function() {
             console.log( "ready!" );
-            refreshFilms();
+            refreshUsers();
         });
         function validate(){
         
             document.filmForm.btnsave.disabled=true
         }
 
-        function refreshFilms(){
+        function refreshUsers(){
             
             var type = "GET";      
             var ajaxurl = "film/film_all";
@@ -156,12 +168,11 @@
                     console.log(data)
                     $.each(data, function() {
                         console.log(data);
-                        /*var html+='<tr>';
+                        var html+='<tr>';
                         html+='<td>'+this.title+'</td>';
                         html+='<td>'+this.synopsis+'</td>';
                         html+='<td>'+this.age+'</td>';
-                        html+='</tr>';*/
-                        $('#open-modal-edit').attr('data-film',this.id);
+                        html+='</tr>';
                     })
                 }
             });  
