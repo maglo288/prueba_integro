@@ -128,7 +128,11 @@
     </div>
     </div>
     </div>
-    </div>
+</div>
+
+@push('js')
+    
+
     <script type="text/javascript">
         $( document ).ready(function() {
             console.log( "ready!" );
@@ -282,3 +286,4 @@
         //console.log("sdd");
     //});
     </script>
+@endpush
