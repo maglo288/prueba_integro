@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Film;
+use Faker\Factory as Faker;
 
 class FilmsTableSeeder extends Seeder
 {
@@ -14,6 +14,13 @@ class FilmsTableSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Film::factory(5)->create();
+        $table= \DB::table('films');
+        $faker = Faker::create();
+        for ($i=0; $i < 10 ; $i++) { 
+            $insert['title'] = $faker->firstname;
+            $insert['synopsis'] = $faker->lastname;
+            $insert['age'] = rand ( 10 , getrandmax());
+            $table->insert($insert);
+        }
     }
 }

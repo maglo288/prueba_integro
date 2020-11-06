@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Film;
+use App\Models\Film;
 class FilmController extends Controller
 {
     public function store(Request $request)
@@ -20,6 +20,9 @@ class FilmController extends Controller
 
     public function update(Film $model,Request $request, $id){
         $films = $model->find($id);
+        $films->title = $request->title;
+        $films->synopsis = $request->synopsis;
+        $films->age = $request->age;
         return $films->save();
     }
 
@@ -28,10 +31,13 @@ class FilmController extends Controller
         return $films->delete();
     }
 
-    public function info(Request $request){
-        $f = new Film();
-        $films = $f->find($request->id_film);
-        return response()->json([$films]);
+    public function info(Film $model, $id){
+        // $f = new Film();
+        // echo ($request);
+        $films = $model->find($id);
+        return  ['film' => $films];
+        // $films = $f->find($request->id_film);
+        // return response()->json([$films]);
         
     }
 
@@ -43,7 +49,7 @@ class FilmController extends Controller
         ];
     }
 
-    public function comparar_año(){
+    public function comparar_anio(){
 
     }
 }

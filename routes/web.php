@@ -23,23 +23,29 @@ Route::group(['middleware' => 'auth'], function () {
     });
     /*Route::get('/', function () {
     });*/
+    Route::post('films', 'App\Http\Controllers\FilmController@store');
+    
+    Route::get('films/film_all', [
+        'as' => 'films.film_all',
+        'uses' => 'App\Http\Controllers\FilmController@film_all'
+    ]);
+    
+    Route::get('films/film_all', [
+        'as' => 'films.film_all',
+        'uses' => 'App\Http\Controllers\FilmController@film_all'
+    ]);
+    
+    Route::get('films/info/{id}',[
+		'uses' => 'App\Http\Controllers\FilmController@info'
+	]);
+    
+    Route::put('films/{id}', [
+        'uses' => 'App\Http\Controllers\FilmController@update'
+    ]);
+    Route::delete('films/{id}',[
+        'uses' => 'App\Http\Controllers\FilmController@destroy'
+    ]);
+    Route::get('/users', [App\Http\Controllers\UsersController::class, 'index'])->name('users');
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('films', 'FilmController@store')->middleware('role');
-
-Route::get('films/film_all', [
-    'as' => 'films.film_all',
-    'uses' => 'FilmController@film_all'
-]);
-
-Route::get('films/film_all', [
-    'as' => 'films.film_all',
-    'uses' => 'FilmController@film_all'
-]);
-
-Route::get('films/info','FilmController@info')->middleware('role');
-
-	Route::put('films/{id}', [
-		'uses' => 'FilmController@update'
-	]);
