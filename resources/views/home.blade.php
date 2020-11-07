@@ -54,8 +54,12 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Título:</strong>
-                            <input type="text" name="title" id="title" class="form-control" placeholder="Título"
-                                onchange="validate()">
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Título">
+                            <span id="error-title" class="invalid-feedback" style="display: none;" role="alert">
+                                <strong>
+                                    Este campo es obligatorio
+                                </strong>
+                            </span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -70,6 +74,11 @@
                             <strong>Año:</strong>
                             <input type="number" name="age" maxlength="4" id="age" class="form-control"
                                 placeholder="Año" onblur="validate()" onkeypress="validate()" required>
+                            <span id="error-age" class="invalid-feedback" style="display: none;" role="alert">
+                                <strong>
+                                    Este campo es obligatorio y debe ser menor o igual al año 2020.
+                                </strong>
+                            </span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -97,7 +106,12 @@
                         <div class="form-group">
                             <strong>Título:</strong>
                             <input type="text" name="edit_title" id="edit_title" class="form-control"
-                                placeholder="Título" onchange="validate()" value=''>
+                                placeholder="Título" value='' required>
+                            <span id="error-title-edit" class="invalid-feedback" style="display: none;" role="alert">
+                                <strong>
+                                    Este campo es obligatorio
+                                </strong>
+                            </span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -112,6 +126,11 @@
                             <strong>Año:</strong>
                             <input type="number" maxlength="4" name="edit_age" id="edit_age" class="form-control"
                                 placeholder="Año" onblur="validate()" onkeypress="validate()" value='' required>
+                                <span id="error-age-edit" class="invalid-feedback" style="display: none;" role="alert">
+                                    <strong>
+                                        Este campo es obligatorio y debe ser menor o igual al año 2020.
+                                    </strong>
+                                </span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -159,7 +178,7 @@
         });
         function validate(){
         
-            document.filmForm.btnsave.disabled=true
+            //document.filmForm.btnsave.disabled=true
         }
 
         function refreshFilms(){
@@ -236,33 +255,35 @@
         });
 
         function SaveFilm(){
-            $(".div-load").show()
-            title = $("#title").val()
-            synopsis = $("#synopsis").val()
-            age = $("#age").val()
-            $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('[name="_token"]').val()
-            }
-            })
-            var formData = {
-                title: title,
-                synopsis: synopsis,
-                age: age,
-            }
-            var type = "POST";
-            var ajaxurl = 'films';
-            $.ajax({
-                type: type,
-                url: ajaxurl,
-                data: formData,
-                dataType: 'json',
-                success: function(data) {
-                    $("#ModalCreatePelicula").modal('hide');
-                    refreshFilms();
-                    
+            title = $("#ModalCreatePelicula #title").val()
+            synopsis = $("#ModalCreatePelicula #synopsis").val()
+            age = $("#ModalCreatePelicula #age").val()
+            if(validacionesCrear() == 0){
+                $(".div-load").show()
+                $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('[name="_token"]').val()
                 }
-            });
+                })
+                var formData = {
+                    title: title,
+                    synopsis: synopsis,
+                    age: age,
+                }
+                var type = "POST";
+                var ajaxurl = 'films';
+                $.ajax({
+                    type: type,
+                    url: ajaxurl,
+                    data: formData,
+                    dataType: 'json',
+                    success: function(data) {
+                        $("#ModalCreatePelicula").modal('hide');
+                        refreshFilms();
+                        
+                    }
+                });
+            }
         }
 
         function SaveEditFilm(){            
@@ -270,39 +291,40 @@
             var title = $("#ModalEditPelicula #edit_title").val();
             var synopsis = $("#ModalEditPelicula #edit_synopsis").val()
             var age = $("#ModalEditPelicula #edit_age").val()
-
-            $.ajaxSetup({
-                headers: {
-                'X-CSRF-TOKEN': $('[name="_token"]').val()
-                }
-            })
-            console.log("films : "+id_film)
-            var formData = {
-                id: id_film,
-                title: title,
-                synopsis: synopsis,
-                age: age,
-            }
-            console.log(formData)
-            var type = "PUT";      
-            var ajaxurl = "films/"+id_film;
-            $.ajax({
-                type: type,
-                url: ajaxurl,
-                data: formData,
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                    if (data == 1){
-
-                        $("#ModalEditPelicula").modal('hide')
-                        refreshFilms();
-
+            if(validacionesEditar() == 0){
+                $(".div-load").show()
+                $.ajaxSetup({
+                    headers: {
+                    'X-CSRF-TOKEN': $('[name="_token"]').val()
                     }
-                //location.reload()
-                },        
-            });
-    
+                })
+                console.log("films : "+id_film)
+                var formData = {
+                    id: id_film,
+                    title: title,
+                    synopsis: synopsis,
+                    age: age,
+                }
+                console.log(formData)
+                var type = "PUT";      
+                var ajaxurl = "films/"+id_film;
+                $.ajax({
+                    type: type,
+                    url: ajaxurl,
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if (data == 1){
+
+                            $("#ModalEditPelicula").modal('hide')
+                            refreshFilms();
+
+                        }
+                    //location.reload()
+                    },        
+                });
+            }
         }
         function SaveDeleteFilm(){
             var id_film = $('#ModalDeletePelicula #film_id').val()
@@ -333,19 +355,47 @@
     
         }
 
-        /*$(document).on('click','#open-modal-crear',function(){
-        /*var url = "domain.com/yoururl";
-        var tour_id= $(this).val();
-        $.get(url + '/' + tour_id, function (data) {
-            //success data
-            console.log(data);
-            $('#tour_id').val(data.id);
-            $('#name').val(data.name);
-            $('#details').val(data.details);
-            $('#btn-save').val("update");
-            $('#myModal').modal('show');
-        }) */
-        //console.log("sdd");
-    //});
+        function validacionesEditar(){
+            id_film = $('#ModalEditPelicula #film_id').val()
+            edit_title = $("#ModalEditPelicula #edit_title").val()
+            edit_synopsis = $("#ModalEditPelicula #edit_synopsis").val()
+            edit_age = $("#ModalEditPelicula #edit_age").val()
+            error = 0;
+            if (edit_title == '' || edit_title == undefined ) {
+                $("#error-title-edit").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-title-edit").css('display', 'none');
+            }
+
+            if (edit_age == '' || edit_age == undefined || isNaN(edit_age) || edit_age > '2020') {
+                $("#error-age-edit").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-age-edit").css('display', 'none');
+            }
+            return error;
+        }
+
+        function validacionesCrear(){
+            id_film = $('#ModalCreatePelicula #film_id').val()
+            title = $("#ModalCreatePelicula #title").val()
+            age = $("#ModalCreatePelicula #age").val()
+            error = 0;
+            if (title == '' || title == undefined ) {
+                $("#error-title").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-title").css('display', 'none');
+            }
+
+            if (age == '' || age == undefined || isNaN(age) || age > '2020') {
+                $("#error-age").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-age").css('display', 'none');
+            }
+            return error;
+        }
 </script>
 @endpush

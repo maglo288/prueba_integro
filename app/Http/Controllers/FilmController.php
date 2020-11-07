@@ -10,7 +10,7 @@ class FilmController extends Controller
     {
         return Film::create(
             [
-                'title' => $request->nombre,
+                'title' => $request->title,
                 'synopsis' => $request->synopsis,
                 'age' => $request->age,
             ]
@@ -49,7 +49,5 @@ class FilmController extends Controller
         ];
     }
 
-    public function comparar_anio(){
-
-    }
+    
 }

@@ -11,9 +11,9 @@
             <div class="card">
                 <div class="card-header">Usuarios
                     <a href="#" id="open-modal-crear" class="btn btn-sm btn-primary float-right open_modal-crear"
-                        data-toggle="modal" data-target="#ModalCreatePelicula">Crear</a>
+                        data-toggle="modal" data-target="#ModalCreateUser">Crear</a>
                 </div>
-                <div class="card-body" id='table_films'>
+                <div class="card-body" id='table_users'>
                     @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -25,7 +25,6 @@
                                 <th>Nombre</th>
                                 <th>Nickname</th>
                                 <th>Email</th>
-                                <th>Password</th>
                                 <th colspan="2">Acciones</th>
 
                             </tr>
@@ -49,7 +48,7 @@
                 <h4 class="modal-title" id="CrudModal">Crear Usuario</h4>
             </div>
             <div class="modal-body">
-                <input type="hidden" name="film_id" id="film_id">
+                <input type="hidden" name="user_id" id="user_id">
                 @csrf
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -57,12 +56,23 @@
                             <strong>Name:</strong>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Nombre"
                                 onchange="validate()" required minlength="5">
+                            <span id="error-name" class="invalid-feedback" style="display: none;" role="alert">
+                                <strong>
+                                    Este campo es obligatorio y debe ser mínimo de 5 caracteres.
+                                </strong>
+                            </span>
+                                
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Nickname:</strong>
                             <input type='text' name="nickname" pattern="[A-Za-z0-9]" id="nickname" class="form-control" placeholder="Nickname" required>
+                            <span id="error-nickname" class="invalid-feedback" style="display: none;" role="alert">
+                                <strong>
+                                    Este campo es obligatorio 
+                                </strong>
+                            </span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -75,6 +85,11 @@
                         <div class="form-group">
                             <strong>Contraseña:</strong>
                             <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" onblur="validate()" onkeypress="validate()" required>
+                            <span id="error-password" class="invalid-feedback" style="display: none;" role="alert">
+                                <strong>
+                                    Este campo es obligatorio y debe contener al menos 1 letra mayúscula y 1 número.
+                                </strong>
+                            </span>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -117,12 +132,12 @@
                             <input type="email" name="edit_email" id="edit_email" class="form-control" placeholder="Email" onblur="validate()" onkeypress="validate()" required>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12">
+                    <!--<div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Contraseña:</strong>
                             <input type="password" name="edit_password" id="edit_password" class="form-control" placeholder="Contraseña" onblur="validate()" onkeypress="validate()" required>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                         <button onclick="SaveEditUser()" id="edit-btn-save" name="edit-btn-save"
                             class="btn btn-primary">Guardar</button>
@@ -168,7 +183,7 @@
         });
         function validate(){
         
-            document.filmForm.btnsave.disabled=true
+            //document.filmForm.btnsave.disabled=true
         }
 
         function refreshUser(){
@@ -187,12 +202,13 @@
                 url: ajaxurl,
                 dataType: 'json',
                 success: function (data) {
-                    $.each(data.films, function(i, item) {
+                    
+                    $.each(data.users, function(i, item) {
+                        console.log("data es: "+item);
                         html+='<tr>';
                         html+='<td>'+item.name+'</td>';
                         html+='<td>'+item.nickname+'</td>';
                         html+='<td>'+item.email+'</td>';
-                        html+='<td>'+item.password+'</td>';
                         html+= '<td>\
                             <a href="#" id="open-modal-edit" data-user="'+item.id+'" data-toggle="modal" class="btn btn-primary btn-sm open-modal" data-target="#ModalEditUser">Editar</a>\
                         </td>'
@@ -246,35 +262,38 @@
         });
 
         function SaveUser(){
-            $(".div-load").show()
+            
             name = $("#name").val()
             nickname = $("#nickname").val()
             email = $("#email").val()
             password = $("#password").val()
-            $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('[name="_token"]').val()
-            }
-            })
-            var formData = {
-                name: name,
-                nickname: nickname,
-                email: email,
-                password: password,
-            }
-            var type = "POST";
-            var ajaxurl = 'users';
-            $.ajax({
-                type: type,
-                url: ajaxurl,
-                data: formData,
-                dataType: 'json',
-                success: function(data) {
-                    $("#ModalCreateUser").modal('hide');
-                    refreshUsers();
-                    
+            if(validacionesCrear()== 0){
+                $(".div-load").show()
+                $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('[name="_token"]').val()
                 }
-            });
+                })
+                var formData = {
+                    name: name,
+                    nickname: nickname,
+                    email: email,
+                    password: password,
+                }
+                var type = "POST";
+                var ajaxurl = 'users';
+                $.ajax({
+                    type: type,
+                    url: ajaxurl,
+                    data: formData,
+                    dataType: 'json',
+                    success: function(data) {
+                        $("#ModalCreateUser").modal('hide');
+                        refreshUser();
+                        
+                    }
+                });
+            }
         }
 
         function SaveEditUser(){            
@@ -282,7 +301,6 @@
             var name = $("#ModalEditUser #edit_name").val();
             var nickname = $("#ModalEditUser #edit_nickname").val()
             var email = $("#ModalEditUser #edit_email").val()
-            var password = $("#ModalEditUser #edit_password").val()
 
             $.ajaxSetup({
                 headers: {
@@ -295,7 +313,6 @@
                 name: name,
                 nickname: nickname,
                 email: email,
-                password: password,
             }
             console.log(formData)
             var type = "PUT";      
@@ -310,7 +327,7 @@
                     if (data == 1){
 
                         $("#ModalEditUser").modal('hide')
-                        refreshUsers();
+                        refreshUser();
 
                     }
                 //location.reload()
@@ -338,7 +355,7 @@
                     if (data == 1){
 
                         $("#ModalDeleteUser").modal('hide')
-                        refreshUsers();
+                        refreshUser();
 
                     }
                 //location.reload()
@@ -347,6 +364,57 @@
     
         }
 
+        function validacionesCrear(){
+            id_user = $('#ModalCreateUser #user_id').val()
+            name = $("#ModalCreateUser #name").val()
+            nickname = $("#ModalCreateUser #nickname").val()
+            password = $("#ModalCreateUser #password").val()
+            error = 0;
+            patron = /[A-Za-z0-9]/;
+            if (name == '' || name == undefined ) {
+                $("#error-name").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-name").css('display', 'none');
+            }
 
+            if (nickname == '' || nickname == undefined || !patron.test(nickname)) {
+                $("#error-nickname").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-nickname").css('display', 'none');
+            }
+
+            if (password == '' || password == undefined) {
+                $("#error-password").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-password").css('display', 'none');
+            }
+            return error;
+        }
+
+        function validacionesEditar(){
+            id_user = $('#ModalEditUser #user_id').val()
+            edit_name = $("#ModalEditUser #edit_name").val()
+            edit_nickname = $("#ModalEditUser #edit_nickname").val()
+            error = 0;
+            patron = /[A-Za-z0-9]/;
+            if (edit_name == '' || edit_name == undefined ) {
+                $("#error-edit_name").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-edit_name").css('display', 'none');
+            }
+
+            if (edit_nickname == '' || edit_nickname == undefined || !patron.test(edit_nickname)) {
+                $("#error-edit_nickname").css('display', 'block');
+                error = 1;
+            }else{
+                $("#error-edit_nickname").css('display', 'none');
+            }
+
+        
+        }
 </script>
 @endpush

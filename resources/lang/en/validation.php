@@ -95,7 +95,7 @@ return [
     'numeric' => 'El :attribute debe ser un número.',
     'password' => 'La contraseña es incorrecta.',
     'present' => 'El campo :attribute debe estar presente.',
-    'regex' => 'El formato :attribute no es válido.',
+    'regex' => 'El formato :attribute no es válido. Debe contener al menos 1 letra mayúscula y 1 número ',
     'required' => 'El campo :attribute es obligatorio.',
     'required_if' => 'El campo :attribute es obligatorio cuando :other es :value.',
     'required_unless' => 'El campo :attribute es obligatorio a menos que :other esté en :values.',

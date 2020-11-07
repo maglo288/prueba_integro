@@ -30,7 +30,7 @@ class UsersController extends Controller
         $users->name = $request->name;
         $users->nickname = $request->nickname;
         $users->email = $request->email;
-        $users->password = $request->password;
+        //$users->password = $request->password;
         return $users->save();
     }
 
